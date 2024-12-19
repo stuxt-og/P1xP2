@@ -138,9 +138,9 @@ BEGIN_VS_SHADER( SDK_EyeRefract_dx9, "Help for SDK_EyeRefract" )
 		}
 		else if ( params[CLOAKPASSENABLED]->GetIntValue() )
 		{
-			CloakBlendedPassVars_t info;
-			SetupVarsCloakBlendedPass( info );
-			InitParamsCloakBlendedPass( this, params, pMaterialName, info );
+			CloakBlendedPassVars_t l_info;
+			SetupVarsCloakBlendedPass(l_info);
+			InitParamsCloakBlendedPass( this, params, pMaterialName, l_info);
 		}
 
 		// Emissive Scroll Pass
@@ -150,9 +150,9 @@ BEGIN_VS_SHADER( SDK_EyeRefract_dx9, "Help for SDK_EyeRefract" )
 		}
 		else if ( params[EMISSIVEBLENDENABLED]->GetIntValue() )
 		{
-			EmissiveScrollBlendedPassVars_t info;
-			SetupVarsEmissiveScrollBlendedPass( info );
-			InitParamsEmissiveScrollBlendedPass( this, params, pMaterialName, info );
+			EmissiveScrollBlendedPassVars_t l_info;
+			SetupVarsEmissiveScrollBlendedPass(l_info);
+			InitParamsEmissiveScrollBlendedPass( this, params, pMaterialName, l_info);
 		}
 	}
 
@@ -175,17 +175,17 @@ BEGIN_VS_SHADER( SDK_EyeRefract_dx9, "Help for SDK_EyeRefract" )
 		// Cloak Pass
 		if ( params[CLOAKPASSENABLED]->GetIntValue() )
 		{
-			CloakBlendedPassVars_t info;
-			SetupVarsCloakBlendedPass( info );
-			InitCloakBlendedPass( this, params, info );
+			CloakBlendedPassVars_t l_info;
+			SetupVarsCloakBlendedPass(l_info);
+			InitCloakBlendedPass( this, params, l_info);
 		}
 
 		// Emissive Scroll Pass
 		if ( params[EMISSIVEBLENDENABLED]->GetIntValue() )
 		{
-			EmissiveScrollBlendedPassVars_t info;
-			SetupVarsEmissiveScrollBlendedPass( info );
-			InitEmissiveScrollBlendedPass( this, params, info );
+			EmissiveScrollBlendedPassVars_t l_info;
+			SetupVarsEmissiveScrollBlendedPass(l_info);
+			InitEmissiveScrollBlendedPass( this, params, l_info);
 		}
 	}
 

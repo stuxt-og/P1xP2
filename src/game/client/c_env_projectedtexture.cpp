@@ -378,9 +378,7 @@ void C_EnvProjectedTexture::UpdateLight( void )
 
 		NDebugOverlay::Box( vec3_origin, mins, maxs, 0, 255, 0, 100, 0.0f );
 #endif
-		
-		bool bVisible = IsBBoxVisible( mins, maxs );
-		if (!bVisible)
+		if (!IsBBoxVisible(mins, maxs))
 		{
 			// Spotlight's extents aren't in view
 			if ( m_LightHandle != CLIENTSHADOW_INVALID_HANDLE )

@@ -714,10 +714,10 @@ void GL_DrawLine( const Vector &start, const Vector &dir, float length, int r, i
 	glEnd();
 }
 
-void GL_DrawBox( Vector origin, float size, int r, int g, int b )
+void GL_DrawBox( Vector p_origin, float size, int r, int g, int b )
 {
-	Vector mins = origin - Vector(size,size,size);
-	Vector maxs = origin + Vector(size,size,size);
+	Vector mins = p_origin - Vector(size,size,size);
+	Vector maxs = p_origin + Vector(size,size,size);
 	const float *v[2] = {mins.Base(), maxs.Base()};
 
 	Vector start, end;
@@ -953,7 +953,7 @@ BOOL ReadDisplacementFile( const char *filename )
 void DrawDisplacementData( void )
 {
 	int		i, j;
-	int		width, halfCount;
+	int		l_width, halfCount;
 
 	GLUquadricObj *pObject = gluNewQuadric();
 
@@ -978,20 +978,20 @@ void DrawDisplacementData( void )
 
 	halfCount = dispPointCount / 2;
 
-	width = sqrt( (float)halfCount );
+	l_width = sqrt( (float)halfCount );
 
 	glDisable( GL_CULL_FACE );
 
 	glColor3f( 0.0f, 0.0f, 1.0f );
-	for( i = 0; i < width - 1; i++ )
+	for( i = 0; i < l_width - 1; i++ )
 	{
-		for( j = 0; j < width - 1; j++ )
+		for( j = 0; j < l_width - 1; j++ )
 		{
 			glBegin( GL_POLYGON );
-			glVertex3f( dispPoints[i*width+j][0], dispPoints[i*width+j][1], dispPoints[i*width+j][2] );
-			glVertex3f( dispPoints[(i+1)*width+j][0], dispPoints[(i+1)*width+j][1], dispPoints[(i+1)*width+j][2] );
-			glVertex3f( dispPoints[(i+1)*width+(j+1)][0], dispPoints[(i+1)*width+(j+1)][1], dispPoints[(i+1)*width+(j+1)][2] );
-			glVertex3f( dispPoints[i*width+(j+1)][0], dispPoints[i*width+(j+1)][1], dispPoints[i*width+(j+1)][2] );
+			glVertex3f( dispPoints[i* l_width +j][0], dispPoints[i* l_width +j][1], dispPoints[i* l_width +j][2] );
+			glVertex3f( dispPoints[(i+1)* l_width +j][0], dispPoints[(i+1)* l_width +j][1], dispPoints[(i+1)* l_width +j][2] );
+			glVertex3f( dispPoints[(i+1)* l_width +(j+1)][0], dispPoints[(i+1)* l_width +(j+1)][1], dispPoints[(i+1)* l_width +(j+1)][2] );
+			glVertex3f( dispPoints[i* l_width +(j+1)][0], dispPoints[i* l_width +(j+1)][1], dispPoints[i* l_width +(j+1)][2] );
 			glEnd();
 		}
 	}
@@ -1012,26 +1012,26 @@ void DrawDisplacementData( void )
 #endif
 
 	glColor3f( 0.0f, 1.0f, 0.0f );
-	for( i = 0; i < width - 1; i++ )
+	for( i = 0; i < l_width - 1; i++ )
 	{
-		for( j = 0; j < width - 1; j++ )
+		for( j = 0; j < l_width - 1; j++ )
 		{
 			glBegin( GL_POLYGON );
-			glVertex3f( dispPoints[i*width+j][0] + ( dispNormals[i*width+j][0] * 150.0f ), 
-				        dispPoints[i*width+j][1] + ( dispNormals[i*width+j][1] * 150.0f ), 
-						dispPoints[i*width+j][2] + ( dispNormals[i*width+j][2] * 150.0f ) );
+			glVertex3f( dispPoints[i* l_width +j][0] + ( dispNormals[i* l_width +j][0] * 150.0f ),
+				        dispPoints[i* l_width +j][1] + ( dispNormals[i* l_width +j][1] * 150.0f ),
+						dispPoints[i* l_width +j][2] + ( dispNormals[i* l_width +j][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[(i+1)*width+j][0] + ( dispNormals[(i+1)*width+j][0] * 150.0f ), 
-				        dispPoints[(i+1)*width+j][1] + ( dispNormals[(i+1)*width+j][1] * 150.0f ), 
-						dispPoints[(i+1)*width+j][2] + ( dispNormals[(i+1)*width+j][2] * 150.0f ) );
+			glVertex3f( dispPoints[(i+1)* l_width +j][0] + ( dispNormals[(i+1)* l_width +j][0] * 150.0f ),
+				        dispPoints[(i+1)* l_width +j][1] + ( dispNormals[(i+1)* l_width +j][1] * 150.0f ),
+						dispPoints[(i+1)* l_width +j][2] + ( dispNormals[(i+1)* l_width +j][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[(i+1)*width+(j+1)][0] + ( dispNormals[(i+1)*width+(j+1)][0] * 150.0f ), 
-				        dispPoints[(i+1)*width+(j+1)][1] + ( dispNormals[(i+1)*width+(j+1)][1] * 150.0f ), 
-						dispPoints[(i+1)*width+(j+1)][2] + ( dispNormals[(i+1)*width+(j+1)][2] * 150.0f ) );
+			glVertex3f( dispPoints[(i+1)* l_width +(j+1)][0] + ( dispNormals[(i+1)* l_width +(j+1)][0] * 150.0f ),
+				        dispPoints[(i+1)* l_width +(j+1)][1] + ( dispNormals[(i+1)* l_width +(j+1)][1] * 150.0f ),
+						dispPoints[(i+1)* l_width +(j+1)][2] + ( dispNormals[(i+1)* l_width +(j+1)][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[i*width+(j+1)][0] + ( dispNormals[i*width+(j+1)][0] * 150.0f ), 
-				        dispPoints[i*width+(j+1)][1] + ( dispNormals[i*width+(j+1)][1] * 150.0f ), 
-						dispPoints[i*width+(j+1)][2] + ( dispNormals[i*width+(j+1)][2] * 150.0f ) );
+			glVertex3f( dispPoints[i* l_width +(j+1)][0] + ( dispNormals[i* l_width +(j+1)][0] * 150.0f ),
+				        dispPoints[i* l_width +(j+1)][1] + ( dispNormals[i* l_width +(j+1)][1] * 150.0f ),
+						dispPoints[i* l_width +(j+1)][2] + ( dispNormals[i* l_width +(j+1)][2] * 150.0f ) );
 			glEnd();
 		}
 	}
@@ -1039,26 +1039,26 @@ void DrawDisplacementData( void )
 	glDisable( GL_DEPTH_TEST );
 
 	glColor3f( 0.0f, 0.0f, 1.0f );
-	for( i = 0; i < width - 1; i++ )
+	for( i = 0; i < l_width - 1; i++ )
 	{
-		for( j = 0; j < width - 1; j++ )
+		for( j = 0; j < l_width - 1; j++ )
 		{
 			glBegin( GL_LINE_LOOP );
-			glVertex3f( dispPoints[i*width+j][0] + ( dispNormals[i*width+j][0] * 150.0f ), 
-				        dispPoints[i*width+j][1] + ( dispNormals[i*width+j][1] * 150.0f ), 
-						dispPoints[i*width+j][2] + ( dispNormals[i*width+j][2] * 150.0f ) );
+			glVertex3f( dispPoints[i* l_width +j][0] + ( dispNormals[i* l_width +j][0] * 150.0f ),
+				        dispPoints[i* l_width +j][1] + ( dispNormals[i* l_width +j][1] * 150.0f ),
+						dispPoints[i* l_width +j][2] + ( dispNormals[i* l_width +j][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[(i+1)*width+j][0] + ( dispNormals[(i+1)*width+j][0] * 150.0f ), 
-				        dispPoints[(i+1)*width+j][1] + ( dispNormals[(i+1)*width+j][1] * 150.0f ), 
-						dispPoints[(i+1)*width+j][2] + ( dispNormals[(i+1)*width+j][2] * 150.0f ) );
+			glVertex3f( dispPoints[(i+1)* l_width +j][0] + ( dispNormals[(i+1)* l_width +j][0] * 150.0f ),
+				        dispPoints[(i+1)* l_width +j][1] + ( dispNormals[(i+1)* l_width +j][1] * 150.0f ),
+						dispPoints[(i+1)* l_width +j][2] + ( dispNormals[(i+1)* l_width +j][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[(i+1)*width+(j+1)][0] + ( dispNormals[(i+1)*width+(j+1)][0] * 150.0f ), 
-				        dispPoints[(i+1)*width+(j+1)][1] + ( dispNormals[(i+1)*width+(j+1)][1] * 150.0f ), 
-						dispPoints[(i+1)*width+(j+1)][2] + ( dispNormals[(i+1)*width+(j+1)][2] * 150.0f ) );
+			glVertex3f( dispPoints[(i+1)* l_width +(j+1)][0] + ( dispNormals[(i+1)* l_width +(j+1)][0] * 150.0f ),
+				        dispPoints[(i+1)* l_width +(j+1)][1] + ( dispNormals[(i+1)* l_width +(j+1)][1] * 150.0f ),
+						dispPoints[(i+1)* l_width +(j+1)][2] + ( dispNormals[(i+1)* l_width +(j+1)][2] * 150.0f ) );
 
-			glVertex3f( dispPoints[i*width+(j+1)][0] + ( dispNormals[i*width+(j+1)][0] * 150.0f ), 
-				        dispPoints[i*width+(j+1)][1] + ( dispNormals[i*width+(j+1)][1] * 150.0f ), 
-						dispPoints[i*width+(j+1)][2] + ( dispNormals[i*width+(j+1)][2] * 150.0f ) );
+			glVertex3f( dispPoints[i* l_width +(j+1)][0] + ( dispNormals[i* l_width +(j+1)][0] * 150.0f ),
+				        dispPoints[i* l_width +(j+1)][1] + ( dispNormals[i* l_width +(j+1)][1] * 150.0f ),
+						dispPoints[i* l_width +(j+1)][2] + ( dispNormals[i* l_width +(j+1)][2] * 150.0f ) );
 			glEnd();
 		}
 	}

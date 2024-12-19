@@ -1295,7 +1295,7 @@ void DrawLightmappedGeneric_DX9_Internal(CBaseVSShader *pShader, IMaterialVar** 
 			{
 				bool bSeamlessMapping = ( ( info.m_nSeamlessMappingScale != -1 ) && 
 										  ( params[info.m_nSeamlessMappingScale]->GetFloatValue() != 0.0 ) );
-				bool hasEnvmapMask = params[info.m_nEnvmapMask]->IsTexture();
+				bool l_hasEnvmapMask = params[info.m_nEnvmapMask]->IsTexture();
 				if (!bSeamlessMapping )
 					pContextData->m_SemiStaticCmdsOut.SetVertexShaderTextureTransform( VERTEX_SHADER_SHADER_SPECIFIC_CONST_0, info.m_nBaseTextureTransform );
 				// If we have a detail texture, then the bump texcoords are the same as the base texcoords.
@@ -1303,7 +1303,7 @@ void DrawLightmappedGeneric_DX9_Internal(CBaseVSShader *pShader, IMaterialVar** 
 				{
 					pContextData->m_SemiStaticCmdsOut.SetVertexShaderTextureTransform( VERTEX_SHADER_SHADER_SPECIFIC_CONST_2, info.m_nBumpTransform );
 				}
-				if( hasEnvmapMask )
+				if( l_hasEnvmapMask )
 				{
 					pContextData->m_SemiStaticCmdsOut.SetVertexShaderTextureTransform( VERTEX_SHADER_SHADER_SPECIFIC_CONST_4, info.m_nEnvmapMaskTransform );
 				}
@@ -1434,8 +1434,8 @@ void DrawLightmappedGeneric_DX9_Internal(CBaseVSShader *pShader, IMaterialVar** 
 				}
 
 				// disable color modulation
-				float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-				pContextData->m_SemiStaticCmdsOut.SetVertexShaderConstant( VERTEX_SHADER_MODULATION_COLOR, color );
+				float l_color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+				pContextData->m_SemiStaticCmdsOut.SetVertexShaderConstant( VERTEX_SHADER_MODULATION_COLOR, l_color );
 
 				// turn off environment mapping
 				envmapTintVal[0] = 0.0f;

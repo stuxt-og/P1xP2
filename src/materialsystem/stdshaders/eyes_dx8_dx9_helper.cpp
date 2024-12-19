@@ -243,14 +243,14 @@ static void DrawFlashlight( bool bDX9, CBaseVSShader *pShader, IMaterialVar** pa
 //			float vPSConst[4] = {params[info.m_nDilation]->GetFloatValue(), 0.0f, 0.0f, 0.0f};
 //			pShaderAPI->SetPixelShaderConstant( 0, vPSConst, 1 );
 
-			VMatrix worldToTexture;
-			ITexture *pFlashlightDepthTexture;
-			FlashlightState_t flashlightState = pShaderAPI->GetFlashlightStateEx( worldToTexture, &pFlashlightDepthTexture );
-			SetFlashLightColorFromState( flashlightState, pShaderAPI );
+			VMatrix l_worldToTexture;
+			ITexture *l_pFlashlightDepthTexture;
+			FlashlightState_t l_flashlightState = pShaderAPI->GetFlashlightStateEx( l_worldToTexture, &l_pFlashlightDepthTexture );
+			SetFlashLightColorFromState( l_flashlightState, pShaderAPI );
 
-			if( pFlashlightDepthTexture && g_pConfig->ShadowDepthTexture() && flashlightState.m_bEnableShadows )
+			if( l_pFlashlightDepthTexture && g_pConfig->ShadowDepthTexture() && l_flashlightState.m_bEnableShadows )
 			{
-				pShader->BindTexture( SHADER_SAMPLER4, pFlashlightDepthTexture, 0 );
+				pShader->BindTexture( SHADER_SAMPLER4, l_pFlashlightDepthTexture, 0 );
 				pShaderAPI->BindStandardTexture( SHADER_SAMPLER5, TEXTURE_SHADOW_NOISE_2D );
 			}
 
@@ -269,10 +269,10 @@ static void DrawFlashlight( bool bDX9, CBaseVSShader *pShader, IMaterialVar** pa
 				{
 					DECLARE_DYNAMIC_PIXEL_SHADER( sdk_eyes_flashlight_ps20b );
 					SET_DYNAMIC_PIXEL_SHADER_COMBO( PIXELFOGTYPE, pShaderAPI->GetPixelFogCombo() );
-					SET_DYNAMIC_PIXEL_SHADER_COMBO( FLASHLIGHTSHADOWS, flashlightState.m_bEnableShadows && ( pFlashlightDepthTexture != NULL ) );
+					SET_DYNAMIC_PIXEL_SHADER_COMBO( FLASHLIGHTSHADOWS, l_flashlightState.m_bEnableShadows && ( l_pFlashlightDepthTexture != NULL ) );
 					SET_DYNAMIC_PIXEL_SHADER( sdk_eyes_flashlight_ps20b );
 
-					SetDepthFlashlightParams( pShader, pShaderAPI, worldToTexture, flashlightState );
+					SetDepthFlashlightParams( pShader, pShaderAPI, l_worldToTexture, l_flashlightState );
 				}
 				else
 				{
@@ -286,10 +286,10 @@ static void DrawFlashlight( bool bDX9, CBaseVSShader *pShader, IMaterialVar** pa
 			{
 				DECLARE_DYNAMIC_PIXEL_SHADER( sdk_eyes_flashlight_ps30 );
 				SET_DYNAMIC_PIXEL_SHADER_COMBO( PIXELFOGTYPE, pShaderAPI->GetPixelFogCombo() );
-				SET_DYNAMIC_PIXEL_SHADER_COMBO( FLASHLIGHTSHADOWS, flashlightState.m_bEnableShadows && ( pFlashlightDepthTexture != NULL ) );
+				SET_DYNAMIC_PIXEL_SHADER_COMBO( FLASHLIGHTSHADOWS, l_flashlightState.m_bEnableShadows && ( l_pFlashlightDepthTexture != NULL ) );
 				SET_DYNAMIC_PIXEL_SHADER( sdk_eyes_flashlight_ps30 );
 
-				SetDepthFlashlightParams( pShader, pShaderAPI, worldToTexture, flashlightState );
+				SetDepthFlashlightParams( pShader, pShaderAPI, l_worldToTexture, l_flashlightState );
 			}
 #endif
 		}

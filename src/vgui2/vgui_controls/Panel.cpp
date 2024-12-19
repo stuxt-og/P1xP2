@@ -1205,12 +1205,12 @@ void Panel::PaintTraverse( bool repaint, bool allowForce )
 			for (int i=0; i < controlGroup->Size(); ++i)
 			{
 				// outline all selected panels 
-				CUtlVector<PHandle> *controlGroup = _buildGroup->GetControlGroup();
-				for (int i=0; i < controlGroup->Size(); ++i)
+				CUtlVector<PHandle> *l_controlGroup = _buildGroup->GetControlGroup();
+				for (int j=0; j < l_controlGroup->Size(); ++j)
 				{
-					surface()->PushMakeCurrent( ((*controlGroup)[i].Get())->GetVPanel(), false );
-					((*controlGroup)[i].Get())->PaintBuildOverlay();
-					surface()->PopMakeCurrent( ((*controlGroup)[i].Get())->GetVPanel() );
+					surface()->PushMakeCurrent( ((*l_controlGroup)[j].Get())->GetVPanel(), false );
+					((*l_controlGroup)[j].Get())->PaintBuildOverlay();
+					surface()->PopMakeCurrent( ((*l_controlGroup)[j].Get())->GetVPanel() );
 				}	
 			
 				_buildGroup->DrawRulers();						
@@ -6848,8 +6848,8 @@ void Panel::OnFinishDragging( bool mousereleased, MouseCode code, bool abort /*=
 				if ( pHover )
 				{
 					// Figure out if it's a menu item...
-					int c = menu->GetItemCount();
-					for ( int i = 0; i < c; ++i )
+					int i_max = menu->GetItemCount();
+					for ( int i = 0; i < i_max; ++i )
 					{
 						int id = menu->GetMenuID( i );
 						MenuItem *item = menu->GetMenuItem( id );
@@ -7273,13 +7273,13 @@ void CDragDropHelperPanel::PostChildPaint()
 			else
 			{
 				CUtlVector< Panel * > temp;
-				CUtlVector< PHandle >& data = panel->GetDragDropInfo()->m_DragPanels;
+				CUtlVector< PHandle >& l_data = panel->GetDragDropInfo()->m_DragPanels;
 				CUtlVector< KeyValues * >& msglist = panel->GetDragDropInfo()->m_DragData;
-				int i, c;
-				c = data.Count();
-				for ( i = 0; i < c ; ++i )
+
+				int x = l_data.Count();
+				for( int j = 0; j < x; ++j )
 				{
-					Panel *pPanel = data[ i ].Get();
+					Panel *pPanel = l_data[ j ].Get();
 					if ( pPanel )
 					{
 						temp.AddToTail( pPanel );

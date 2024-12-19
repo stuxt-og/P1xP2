@@ -2092,10 +2092,10 @@ bool EvaluateConditional( const char *str )
 		case '%':
 		{
 			// Look for a cvar
-			ConVarRef cvar( str + (bNot ? 2 : 1), true );
-			if (cvar.IsValid())
+			ConVarRef l_cvar( str + (bNot ? 2 : 1), true );
+			if (l_cvar.IsValid())
 			{
-				return cvar.GetBool() ^ bNot;
+				return l_cvar.GetBool() ^ bNot;
 			}
 		} break;
 

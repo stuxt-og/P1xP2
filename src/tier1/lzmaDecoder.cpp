@@ -124,14 +124,6 @@ typedef struct _CLzmaDecoderState
 #define LzmaDecoderInit(vs) { (vs)->RemainLen = kLzmaNeedInitId; }
 #endif
 
-int LzmaDecode(CLzmaDecoderState *vs,
-#ifdef _LZMA_IN_CB
-			   ILzmaInCallback *inCallback,
-#else
-			   const unsigned char *inStream, SizeT inSize, SizeT *inSizeProcessed,
-#endif
-			   unsigned char *outStream, SizeT outSize, SizeT *outSizeProcessed);
-
 #define kNumTopBits 24
 #define kTopValue ((UInt32)1 << kNumTopBits)
 
@@ -265,13 +257,13 @@ int LzmaDecodeProperties(CLzmaProperties *propsRes, const unsigned char *propsDa
 
 int LzmaDecode(CLzmaDecoderState *vs,
 #ifdef _LZMA_IN_CB
-			   ILzmaInCallback *InCallback,
+	ILzmaInCallback *InCallback,
 #else
-			   const unsigned char *inStream, SizeT inSize, SizeT *inSizeProcessed,
+	const unsigned char *inStream, SizeT inSize, SizeT *inSizeProcessed,
 #endif
-			   unsigned char *outStream, SizeT outSize, SizeT *outSizeProcessed)
+	unsigned char *outStream, SizeT outSize, SizeT *outSizeProcessed)
 {
-	CProb *p = vs->Probs;
+	CProb *l_p = vs->Probs;
 	SizeT nowPos = 0;
 	Byte previousByte = 0;
 	UInt32 posStateMask = (1 << (vs->Properties.pb)) - 1;
@@ -370,7 +362,7 @@ int LzmaDecode(CLzmaDecoderState *vs,
 		UInt32 i;
 		UInt32 numProbs = Literal + ((UInt32)LZMA_LIT_SIZE << (lc + vs->Properties.lp));
 		for (i = 0; i < numProbs; i++)
-			p[i] = kBitModelTotal >> 1;
+			l_p[i] = kBitModelTotal >> 1;
 	}
 
 #ifdef _LZMA_IN_CB
@@ -393,12 +385,12 @@ int LzmaDecode(CLzmaDecoderState *vs,
 			)
 			& posStateMask);
 
-		prob = p + IsMatch + (state << kNumPosBitsMax) + posState;
+		prob = l_p + IsMatch + (state << kNumPosBitsMax) + posState;
 		IfBit0(prob)
 		{
 			int symbol = 1;
 			UpdateBit0(prob)
-				prob = p + Literal + (LZMA_LIT_SIZE * 
+				prob = l_p + Literal + (LZMA_LIT_SIZE *
 				(((
 				(nowPos 
 #ifdef _LZMA_OUT_READ
@@ -452,7 +444,7 @@ int LzmaDecode(CLzmaDecoderState *vs,
 else             
 {
 	UpdateBit1(prob);
-	prob = p + IsRep + state;
+	prob = l_p + IsRep + state;
 	IfBit0(prob)
 	{
 		UpdateBit0(prob);
@@ -460,16 +452,16 @@ else
 		rep2 = rep1;
 		rep1 = rep0;
 		state = state < kNumLitStates ? 0 : 3;
-		prob = p + LenCoder;
+		prob = l_p + LenCoder;
 	}
 	  else
 	  {
 		  UpdateBit1(prob);
-		  prob = p + IsRepG0 + state;
+		  prob = l_p + IsRepG0 + state;
 		  IfBit0(prob)
 		  {
 			  UpdateBit0(prob);
-			  prob = p + IsRep0Long + (state << kNumPosBitsMax) + posState;
+			  prob = l_p + IsRep0Long + (state << kNumPosBitsMax) + posState;
 			  IfBit0(prob)
 			  {
 #ifdef _LZMA_OUT_READ
@@ -513,7 +505,7 @@ else
 		{
 			UInt32 distance;
 			UpdateBit1(prob);
-			prob = p + IsRepG1 + state;
+			prob = l_p + IsRepG1 + state;
 			IfBit0(prob)
 			{
 				UpdateBit0(prob);
@@ -522,7 +514,7 @@ else
 		  else 
 		  {
 			  UpdateBit1(prob);
-			  prob = p + IsRepG2 + state;
+			  prob = l_p + IsRepG2 + state;
 			  IfBit0(prob)
 			  {
 				  UpdateBit0(prob);
@@ -540,7 +532,7 @@ else
 		  rep0 = distance;
 		}
 		state = state < kNumLitStates ? 8 : 11;
-		prob = p + RepLenCoder;
+		prob = l_p + RepLenCoder;
 	  }
 	  {
 		  int numBits, offset;
@@ -579,7 +571,7 @@ else
 	  {
 		  int posSlot;
 		  state += kNumLitStates;
-		  prob = p + PosSlot +
+		  prob = l_p + PosSlot +
 			  ((len < kNumLenToPosStates ? len : kNumLenToPosStates - 1) << 
 			  kNumPosSlotBits);
 		  RangeDecoderBitTreeDecode(prob, kNumPosSlotBits, posSlot);
@@ -590,7 +582,7 @@ else
 			  if (posSlot < kEndPosModelIndex)
 			  {
 				  rep0 <<= numDirectBits;
-				  prob = p + SpecPos + rep0 - posSlot - 1;
+				  prob = l_p + SpecPos + rep0 - posSlot - 1;
 			  }
 			  else
 			  {
@@ -607,7 +599,7 @@ else
 					  }
 				  }
 				  while (--numDirectBits != 0);
-				  prob = p + Align;
+				  prob = l_p + Align;
 				  rep0 <<= kNumAlignBits;
 				  numDirectBits = kNumAlignBits;
 			  }

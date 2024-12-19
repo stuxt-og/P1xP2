@@ -283,11 +283,11 @@ float CResponseSystem::LookupEnumeration( const char *name, bool& found )
 // Purpose: 
 // Input  : matcher - 
 //-----------------------------------------------------------------------------
-void CResponseSystem::ResolveToken( Matcher& matcher, char *token, size_t bufsize, char const *rawtoken )
+void CResponseSystem::ResolveToken( Matcher& matcher, char *p_token, size_t bufsize, char const *rawtoken )
 {
 	if ( rawtoken[0] != '[' )
 	{
-		Q_strncpy( token, rawtoken, bufsize );
+		Q_strncpy( p_token, rawtoken, bufsize );
 		return;
 	}
 
@@ -296,12 +296,12 @@ void CResponseSystem::ResolveToken( Matcher& matcher, char *token, size_t bufsiz
 	float f = LookupEnumeration( rawtoken, found );
 	if ( !found )
 	{
-		Q_strncpy( token, rawtoken, bufsize );
-		ResponseWarning( "No such enumeration '%s'\n", token );
+		Q_strncpy( p_token, rawtoken, bufsize );
+		ResponseWarning( "No such enumeration '%s'\n", p_token );
 		return;
 	}
 
-	Q_snprintf( token, bufsize, "%f", f );
+	Q_snprintf( p_token, bufsize, "%f", f );
 }
 
 
@@ -335,10 +335,10 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 
 	const char *in = s;
 
-	char token[ 128 ];
+	char p_token[ 128 ];
 	char rawtoken[ 128 ];
 
-	token[ 0 ] = 0;
+	p_token[ 0 ] = 0;
 	rawtoken[ 0 ] = 0;
 
 	int n = 0;
@@ -380,7 +380,7 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 				n = 0;
 
 				// Convert raw token to real token in case token is an enumerated type specifier
-				ResolveToken( matcher, token, sizeof( token ), rawtoken );
+				ResolveToken( matcher, p_token, sizeof(p_token), rawtoken );
 
 #ifdef MAPBASE
 				// Bits are an entirely different and independent story
@@ -398,7 +398,7 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 				{
 					matcher.usemin = true;
 					matcher.minequals = eq;
-					matcher.minval = (float)atof( token );
+					matcher.minval = (float)atof(p_token);
 
 					matcher.isnumeric = true;
 				}
@@ -406,7 +406,7 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 				{
 					matcher.usemax = true;
 					matcher.maxequals = eq;
-					matcher.maxval = (float)atof( token );
+					matcher.maxval = (float)atof(p_token);
 
 					matcher.isnumeric = true;
 				}
@@ -420,7 +420,7 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 
 					matcher.notequal = nt;
 
-					matcher.isnumeric = AppearsToBeANumber( token );
+					matcher.isnumeric = AppearsToBeANumber(p_token);
 				}
 
 				gt = lt = eq = nt = false;
@@ -449,7 +449,7 @@ void CResponseSystem::ComputeMatcher( Criteria *c, Matcher& matcher )
 		in++;
 	}
 
-	matcher.SetToken( token );
+	matcher.SetToken(p_token);
 	matcher.SetRaw( rawtoken );
 	matcher.valid = true;
 }
@@ -2083,10 +2083,10 @@ int CResponseSystem::ParseOneCriterion( const char *criterionName )
 					break;
 
 				// Look up subcriteria index
-				int idx = m_Criteria.Find( token );
-				if ( idx != m_Criteria.InvalidIndex() )
+				int l_idx = m_Criteria.Find( token );
+				if (l_idx != m_Criteria.InvalidIndex() )
 				{
-					pNewCriterion->subcriteria.AddToTail( idx );
+					pNewCriterion->subcriteria.AddToTail(l_idx);
 				}
 				else
 				{
